@@ -30,5 +30,5 @@ Screenshots:
 
 ![](doc/screenshots/webui.png)
 
-![](doc/screenshots/tuyaWyse2S.jpg)
+![](doc/screenshots/tuyaTywe2S.jpg)
 
