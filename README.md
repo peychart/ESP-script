@@ -14,7 +14,7 @@ The idea is therefore to produce a generic microcode which would accept as input
 
 Here, for example, script performing the basic function of flashing a LED:
 
-"SetGPIO (2, OUTPUT_DOWN); if GPIO(2) then timer(Off, 2500) fi; if timer(Off) then! GPIO(2) + clearTimer(Off) + timer(On, 1000); if timer(On ) then GPIO(2) + clearTimer(On); "
+"SetGPIO (2, OUTPUT_DOWN); if GPIO(2) then timer(Off, 2500) fi; if timer(Off) then !GPIO(2) + clearTimer(Off) + timer(On, 1000); if timer(On) then GPIO(2) + clearTimer(On); "
 
 Formatting this script ("scriptCompiler.sh <blink.esp"), before transmission to the microcontroller, gives:
 
