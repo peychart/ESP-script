@@ -30,3 +30,5 @@ Screenshots:
 
 ![](doc/screenshots/webui.png)
 
+![](doc/screenshots/tuyaWyse2S.jgp)
+
