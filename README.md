@@ -30,5 +30,7 @@ Screenshots:
 
 ![](doc/screenshots/webui.png)
 
+![](doc/screenshots/tuyaTywe2S_flash.jpg)
+
 ![](doc/screenshots/tuyaTywe2S.jpg)
 
