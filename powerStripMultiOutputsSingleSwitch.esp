@@ -30,5 +30,5 @@ if  timer(13)			then if  GPIO(13) then setVar(13off,1) fi + clearTimer(13);
 if  $13on			then if !GPIO(13) then  GPIO(13)+mqttSend("idx":171,"nvalue":1,"svalue":"1") fi+clearVar(13on);
 if  $13off			then if  GPIO(13) then !GPIO(13)+mqttSend("idx":171,"nvalue":0,"svalue":"0") fi+clearVar(13off)+clearTimer(13);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Thus: pressing the switch 3 times in less than 3 seconds (between each press) activates the third output; if the switch is
+//Thus: pressing the switch 3 times in less than 3 second (<1s between each press) activates the third output; if the switch is
 //      held on the last press, the time-out (if defined) is canceled ...
