@@ -180,7 +180,8 @@ function refresh(v=20){\n\
  clearTimeout(this.timer);document.getElementById('about').style.display='none';\n\
  if(v>0)this.timer=setTimeout(function(){RequestDevice('getStatus');refresh();},v*1000);}\n\
 function RequestDevice(url){\n\
- var req=new XMLHttpRequest(), requestURL=location.protocol+'//'+parameters.ipAddr+'/'+url;\n\
+ //var req=new XMLHttpRequest(), requestURL=location.protocol+'//'+parameters.ipAddr+'/'+url;\n\
+ var req=new XMLHttpRequest(), requestURL=location.protocol+'//'+location.host+'/'+url;\n\
  req.open('POST',requestURL);req.responseType='json';req.send();\n\
  if(url=='getConf')req.onload=function(){parameters=req.response;displayNTP();createSwitches();displayDelays();}\n\
  else req.onload=function(){parameters.ipAddr=req.response.ipAddr;refreshSwitches(req.response);}\n\
@@ -191,10 +192,14 @@ function getGpioNumber(i){return parameters.pinGpio[i];}\n\
 function getGpioState(i,status){return getGpioParam('pinState',i,status);}\n\
 //===========Actions:\n\
 function showHelp(){var v,e=document.getElementById('example1');\n\
- e.innerHTML=location.protocol+'//'+parameters.ipAddr+'/plugValues?';\n\
+ //e.innerHTML=location.protocol+'//'+parameters.ipAddr+'/plugValues?';\n\
+ e.innerHTML=location.protocol+'//'+location.host+'/plugValues?';\n\
  v=document.getElementById('switch0');e.innerHTML+=v.name+'='+(v.checked?'true':'false');\n\
  for(var i=1; i<3 &&(v=document.getElementById('switch'+i));i++)e.innerHTML+='&'+v.name+'='+(v.checked?'true':'false');e.href=e.innerHTML;\n\
- e=document.getElementById('example2');e.innerHTML=location.protocol+'//'+parameters.ipAddr+'/plugValues';e.href=e.innerHTML;\n\
+ e=document.getElementById('example2');\n\
+ //e.innerHTML=location.protocol+'//'+parameters.ipAddr+'/plugValues';\n\
+ e.innerHTML=location.protocol+'//'+location.host+'/plugValues';\n\
+ e.href=e.innerHTML;\n\
  refresh(120);document.getElementById('about').style.display='block';\n\
 }\n\
 function ssidSubmit(e){var f;for(f=e;f.tagName!='TABLE';)f=f.parentNode;e=f.querySelectorAll('input[type=text]');\n\
@@ -456,6 +461,10 @@ void setConfig(){
     mqtt.pwd=ESPWebServer.arg("mqttPwd");
   }else if(ESPWebServer.hasArg("mqttTopic")){
     mqtt.topic=ESPWebServer.arg("mqttTopic");
+/*  }else{
+    for(auto& i: pin.gpio) if(ESPWebServer.hasArg(pin.name[i]))
+      setPin(i, ESPWebServer.arg(pin.name[i]));
+    return;*/
   }writeConfig();
 }
 

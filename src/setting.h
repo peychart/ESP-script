@@ -1,6 +1,6 @@
 #include <Arduino.h>
 //Adjust the following:
-#define VERSION                "0.0.1"       //Change this value to reset current config on the next boot...
+#define VERSION                "1.0.1"       //Change this value to reset current config on the next boot...
 
 #define DEBUG
 
@@ -33,12 +33,12 @@
 #define DEFAULT_MQTT_PWD       ""
 #define DEFAULT_MQTT_TOPIC     "domoticz/in"
 
-//#define POWER_LED             D0
-//#define BLINKING_POWERLED     1000UL,0UL
-//#define WIFISTA_LED           D1
-//#define BLINKING_WIFILED      5000UL,250UL
 
 
+#define POWER_LED             01
+#define BLINKING_POWERLED     250UL,1000UL
+#define WIFISTA_LED           03
+#define BLINKING_WIFILED      250UL,5000UL
 
 
 /*

@@ -1,34 +1,34 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Setup: (Tuya powerstrip with Tywe2S - 3 outputs & no control on the USB block)
 setHostname(TuyaPowerstripTywe2S);
 //SETGPIO(pinNumber,pinMode [,pinName [,pinAssociatedValue(ex.:timeOnDelay for output or inital counter value for input)] ]
-setGPIO( 5, OUTPUT_DOWN, plug1, 10000);	//D1
-setGPIO( 4, OUTPUT_DOWN, plug2, 5000);	//D2
-setGPIO(13, OUTPUT_DOWN, plug3, 3600000);	//D3
+setGPIO(13, OUTPUT_DOWN, plug1, 3600000);	//D1
+setGPIO( 4, OUTPUT_DOWN, plug2, 3600000);	//D2
+setGPIO( 5, OUTPUT_DOWN, plug3, 3600000);	//D3
 setGPIO(12, INPUT);				//D7
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-if  GPIO(12)			then timer(switch,100);
-if  timer(switch) && GPIO(12)	then clearTimer(switch)+setvar(switch,1);
-if  $switch && !GPIO(12)	then timer(stop,3000)+timer(o5,100)+if timer(o5) then timer(o4,100) fi+if timer(o4) then timer(o13,100) fi
-				+clearVar(switch) fi;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if  GPIO(12) && !$switchOn	then timer(switch, 50);
+if  timer(switch)		then clearTimer(switch) + if GPIO(12) then setVar(switchOn,1) + timer(stop) + timer(stop,1000) +
+					if $o4 then setvar(o5,1) fi + if $o13 then setvar(o4,1) fi + setvar(o13,1) + fi fi;
+if  $switchOn && !GPIO(12)	then clearVar(switchOn);
 
-if  timer(stop) && timer(o13)	then setVar(13,1) + if !GPIO(12) then setTimer(13,$GPIO(13)) fi + timer(o5)+timer(o4)+timer(o13)+timer(stop) fi;
-if  $13				then if !GPIO(13) then setVar(13on,1) else setVar(13off,1) fi + clearVar(13);
-if  timer(13)			then if  GPIO(13) then setVar(13off,1) fi + clearTimer(13) fi;
-if  $13on			then if !GPIO(13) then  GPIO(13)+mqttSend("idx":203,"nvalue":1,"svalue":"1") fi+clearVar(13on);
-if  $13off			then if  GPIO(13) then !GPIO(13)+mqttSend("idx":203,"nvalue":0,"svalue":"0") fi+clearVar(13off)+clearTimer(13);
-
-if  timer(stop) && timer(o4)	then setVar(4,1) + if !GPIO(12) then setTimer(4,$GPIO(4)) fi + timer(o5)+timer(o4)+timer(o3)+timer(stop) fi;
-if  $4				then if !GPIO(4) then setVar(4on,1) else setVar(4off,1) fi + clearVar(4);
-if  timer(4)			then if  GPIO(4) then setVar(4off,1) fi + clearTimer(4) fi;
-if  $4on			then if !GPIO(4) then  GPIO(4)+mqttSend("idx":202,"nvalue":1,"svalue":"1") fi+clearVar(4on);
-if  $4off			then if  GPIO(4) then !GPIO(4)+mqttSend("idx":202,"nvalue":0,"svalue":"0") fi+clearVar(4off)+clearTimer(4);
-
-if  timer(stop) && timer(o5)	then setVar(5,1) + if !GPIO(12) then setTimer(5,$GPIO(5)) fi + timer(o5)+timer(o4)+timer(o13)+timer(stop) fi;
+if  timer(stop) && $o5		then setVar(5,1) + if !GPIO(12) then setTimer(5,$GPIO(5)) fi + clearVar(o13)+clearVar(o4)+clearVar(o5)+clearVar(stop);
 if  $5				then if !GPIO(5) then setVar(5on,1) else setVar(5off,1) fi + clearVar(5);
-if  timer(5)			then if  GPIO(5) then setVar(5off,1) fi + clearTimer(5) fi;
-if  $5on			then if !GPIO(5) then  GPIO(5)+mqttSend("idx":201,"nvalue":1,"svalue":"1") fi+clearVar(5on);
-if  $5off			then if  GPIO(5) then !GPIO(5)+mqttSend("idx":201,"nvalue":0,"svalue":"0") fi+clearVar(5off)+clearTimer(5);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if  timer(5)			then if  GPIO(5) then setVar(5off,1) fi + clearTimer(5);
+if  $5on			then if !GPIO(5) then  GPIO(5)+mqttSend("idx":173,"nvalue":1,"svalue":"1") fi+clearVar(5on);
+if  $5off			then if  GPIO(5) then !GPIO(5)+mqttSend("idx":173,"nvalue":0,"svalue":"0") fi+clearVar(5off)+clearTimer(5);
+
+if  timer(stop) && $o4 && !$o5	then setVar(4,1) + if !GPIO(12) then setTimer(4,$GPIO(4)) fi + clearVar(o13)+clearVar(o4)+clearVar(o5)+clearVar(stop);
+if  $4				then if !GPIO(4) then setVar(4on,1) else setVar(4off,1) fi + clearVar(4);
+if  timer(4)			then if  GPIO(4) then setVar(4off,1) fi + clearTimer(4);
+if  $4on			then if !GPIO(4) then  GPIO(4)+mqttSend("idx":172,"nvalue":1,"svalue":"1") fi+clearVar(4on);
+if  $4off			then if  GPIO(4) then !GPIO(4)+mqttSend("idx":172,"nvalue":0,"svalue":"0") fi+clearVar(4off)+clearTimer(4);
+
+if  timer(stop) && $o13 && !$o4 && !$o5	then setVar(13,1) + if !GPIO(12) then setTimer(13,$GPIO(13)) fi + clearVar(o13)+clearVar(o4)+clearVar(o5)+clearVar(stop);
+if  $13				then if !GPIO(13) then setVar(13on,1) else setVar(13off,1) fi + clearVar(13);
+if  timer(13)			then if  GPIO(13) then setVar(13off,1) fi + clearTimer(13);
+if  $13on			then if !GPIO(13) then  GPIO(13)+mqttSend("idx":171,"nvalue":1,"svalue":"1") fi+clearVar(13on);
+if  $13off			then if  GPIO(13) then !GPIO(13)+mqttSend("idx":171,"nvalue":0,"svalue":"0") fi+clearVar(13off)+clearTimer(13);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Thus: pressing the switch 3 times in less than 3 seconds (between each press) activates the third output; if the switch is
 //      held on the last press, the time-out (if defined) is canceled ...

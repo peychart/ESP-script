@@ -3,31 +3,33 @@
 //String defaultScript("S2,0,1;G2?Toff,2500;Toff?!G2 Toff Ton,1000;Ton?G2 Ton;");  //Blink...
 
 //To remove:
+//HTuyaPowerstripTywe2S;
+
 String defaultScript("\
-HTuyaPowerstripTywe2S;\
-S5,0,output1,10000;\
-S4,0,output2,5000;\
-S3,0,output3,3600000;\
-S13,3;\
-|~13?Tswitch,100;\
-|Tswitch ~13?Tswitch $switch,1;\
-|$switch !~13?Tstop,3000 To5,100|To5?To4,100;|To4?To3,100;\
- $switch;;\
-|Tstop To3?$3,1 |!~13?setT3,$~3; To5 To4 To3 Tstop;;\
-|$3?|!~3?$3on,1^$3off,1;; $3;\
-|T3?|~3?$3off,1; T3;;\
-|$3on?|!~3?~3 M{\"idx\":203,\"nvalue\":1,\"svalue\":\"1\"}; $3on;\
-|$3off?|~3?!~3 M{\"idx\":203,\"nvalue\":0,\"svalue\":\"0\"}; $3off T3;\
-|Tstop To4?$4,1 |!~13?setT4,$~4; To5 To4 To3 Tstop;;\
-|$4?|!~4?$4on,1^$4off,1;; $4;\
-|T4?|~4?$4off,1; T4;;\
-|$4on?|!~4?~4 M{\"idx\":202,\"nvalue\":1,\"svalue\":\"1\"}; $4on;\
-|$4off?|~4?!~4 M{\"idx\":202,\"nvalue\":0,\"svalue\":\"0\"}; $4off T4;\
-|Tstop To5?$5,1 |!~13?setT5,$~5; To5 To4 To3 Tstop;;\
-|$5?|!~5?$5on,1^$5off,1;; $5;\
-|T5?|~5?$5off,1; T5;;\
-|$5on?|!~5?~5 M{\"idx\":201,\"nvalue\":1,\"svalue\":\"1\"}; $5on;\
-|$5off?|~5?!~5 M{\"idx\":201,\"nvalue\":0,\"svalue\":\"0\"}; $5off T5;\
+HmultiChambre;\
+S13,0,plug1,3600000;\
+S4,0,plug2,3600000;\
+S5,0,plug3,3600000;\
+S12,2;\
+|~12 !$switchOn?Tswitch,50;\
+|Tswitch?Tswitch |~12?$switchOn,1 Tstop Tstop,1000 \
+|$o4?$o5,1; |$o13?$o4,1; $o13,1 ;;;\
+|$switchOn !~12?$switchOn;\
+|Tstop $o5?$5,1 |!~12?T5,$~5; $o13 $o4 $o5 $stop;\
+|$5?|!~5?$5on,1^$5off,1; $5;\
+|T5?|~5?$5off,1; T5;\
+|$5on?|!~5?~5 M{\"idx\":173,\"nvalue\":1,\"svalue\":\"1\"}; $5on;\
+|$5off?|~5?!~5 M{\"idx\":173,\"nvalue\":0,\"svalue\":\"0\"}; $5off T5;\
+|Tstop $o4 !$o5?$4,1 |!~12?T4,$~4; $o13 $o4 $o5 $stop;\
+|$4?|!~4?$4on,1^$4off,1; $4;\
+|T4?|~4?$4off,1; T4;\
+|$4on?|!~4?~4 M{\"idx\":172,\"nvalue\":1,\"svalue\":\"1\"}; $4on;\
+|$4off?|~4?!~4 M{\"idx\":172,\"nvalue\":0,\"svalue\":\"0\"}; $4off T4;\
+|Tstop $o13 !$o4 !$o5?$13,1 |!~12?T13,$~13; $o13 $o4 $o5 $stop;\
+|$13?|!~13?$13on,1^$13off,1; $13;\
+|T13?|~13?$13off,1; T13;\
+|$13on?|!~13?~13 M{\"idx\":171,\"nvalue\":1,\"svalue\":\"1\"}; $13on;\
+|$13off?|~13?!~13 M{\"idx\":171,\"nvalue\":0,\"svalue\":\"0\"}; $13off T13;\
 ");
 
 std::map<String,String>           var;
@@ -70,7 +72,9 @@ extern struct mqttConf{
 
 void setPin(String pinout, bool state){
   if(pin.mode.find(pinout)!=pin.mode.end() && pin.mode[pinout]<2 && pin.state[pinout]!=state){
-    digitalWrite(pinout.toInt(), (pin.state[pinout]=state) xor pin.mode[pinout]);
+    if(pinout.toInt()<0){
+      Serial_print("S(" + String(-pinout.toInt(), DEC) + "):" + (((pin.state[pinout]=state) xor pin.mode[pinout]) ?"1\n" :"0\n"));
+    }else digitalWrite(pinout.toInt(), (pin.state[pinout]=state) xor pin.mode[pinout]);
     DEBUG_print("Set GPIO(" + pinout + ") to " + String(state, DEC) + "\n");
 } }
 
@@ -245,7 +249,7 @@ bool condition(String& s, ulong& i){bool isTrue;
           return false;
         break;
       case '$': //Var ?= true/false
-        if(!getVar(s, --i).toInt())
+        if((getVar(s, --i)!="") xor isTrue)
           return false;
         break;
       case THEN:
