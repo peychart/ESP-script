@@ -34,11 +34,21 @@
 #define DEFAULT_MQTT_TOPIC     "domoticz/in"
 
 
+#define TUYA3S
 
-#define POWER_LED             01
+#ifdef TUYA2S
+ #define POWER_LED             01
+ #define BLINKING_POWERLED     250UL,1000UL
+ #define WIFISTA_LED           03
+ #define BLINKING_WIFILED      250UL,5000UL
+#endif
+
+#ifdef TUYA3S
+#define POWER_LED             16
 #define BLINKING_POWERLED     250UL,1000UL
-#define WIFISTA_LED           03
-#define BLINKING_WIFILED      250UL,5000UL
+#define WIFISTA_LED           05
+#define BLINKING_WIFILED      5000UL,250UL
+#endif
 
 
 /*

@@ -138,8 +138,7 @@ The following allows you to configure some parameters of the Wifi Power Strip (a
 &nbsp;&nbsp;<input id='ntpDayLight' type='checkbox' onclick='checkNTP(this);'>\n\
 &nbsp;&nbsp;<input id='ntpSubmit' type='button' value='Submit' disabled onclick='ntpSubmit(this);'></div>\n\
 </td><td style='text-align:center;'>\n\
-<input id='Clear' type='button' value='Clear' onclick='clearSerialDevice);'>&nbsp;\n\
-<input id='reboot' name='reboot' type='checkbox' style='display:none;' checked>\n\
+<input id='Clear' type='button' value='Save' onclick='clearSerialDevice();'>&nbsp;\n\
 </td></tr>\n</table>\n\
 <br><h3>Network connection [<span id='macAddr'>00:00:00:00:00:00</span>] (device ident: <span id='ident'>Ident</span>):</h3>\n\
 <table id='ssids' style='width:100%;'></table>\n\
@@ -175,7 +174,8 @@ Identification: <input id='mqttIdent' type='text' pattern='^[a-zA-Z][a-zA-Z0-9]*
 <!-==========JScript==========->\n\
 <script>this.timer=0; parameters={'ipAddr':'"));
 ESPWebServer.sendContent(WiFiAP ?WiFi.softAPIP().toString() :WiFi.localIP().toString());
-ESPWebServer.sendContent(F("'};\nfunction init(){RequestDevice('getConf');refresh(1);}\n\
+ESPWebServer.sendContent(F("'};\n\
+function init(){RequestDevice('getConf');refresh(1);}\n\
 function refresh(v=20){\n\
  clearTimeout(this.timer);document.getElementById('about').style.display='none';\n\
  if(v>0)this.timer=setTimeout(function(){RequestDevice('getStatus');refresh();},v*1000);}\n\
@@ -221,7 +221,8 @@ function checkHostname(e){\n\
  else document.getElementById('hostnameSubmit').disabled=true;\n\
 }\nfunction setHostName(n){var v=document.getElementsByName('hostname');\n\
  for(var i=0;i<v.length;i++) if(v[i].value) v[i].value=n;else v[i].innerHTML=n;\n\
-}\nfunction hostnameSubmit(){var e=document.getElementById('hostname');\n\
+}\n\
+function hostnameSubmit(){var e=document.getElementById('hostname');\n\
  setHostName(e.value);document.getElementById('hostnameSubmit').disabled=true;\n\
  RequestDevice('script?edit=H'+e.value);\n\
 }\n\
@@ -236,6 +237,7 @@ function ntpSubmit(e){var cmd='script?edit';\n\
  cmd+=','+(document.getElementById('ntpDayLight').checked?1:0);\n\
  RequestDevice(cmd);e.disabled=true;\n\
 }\n\
+function clearSerialDevice(){var cmd='script?cmd=B';RequestDevice(cmd);}\n\
 function switchSubmit(e){var t,b=false;\n\
  for(t=e;t.tagName!='TR';)t=t.parentNode;t=t.getElementsByTagName('input');\n\
  for(var i=0;i<t.length;i++)if(t[i].type=='number')b|=Number(t[i].value); //Check if delay!=0\n\
@@ -507,7 +509,7 @@ inline void script(String s=ESPWebServer.arg("cmd")){
     ;
     defaultScript=s;
     ESPWebServer.send(200, "text/plain", "ok");
-  }else if(ESPWebServer.hasArg("cmd")){   //Do a script commend:
+  }else if(ESPWebServer.hasArg("cmd")){   //Do a script command:
     DEBUG_print("Command received: "+s+"\n");
     treatment(s); treatment(defaultScript);
     ESPWebServer.send(200, "json/plain", getStatus());

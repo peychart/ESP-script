@@ -6,30 +6,36 @@
 //HTuyaPowerstripTywe2S;
 
 String defaultScript("\
-HmultiChambre;\
-S13,0,plug1,3600000;\
-S4,0,plug2,3600000;\
-S5,0,plug3,3600000;\
-S12,2;\
-|~12 !$switchOn?Tswitch,50;\
-|Tswitch?Tswitch |~12?$switchOn,1 Tstop Tstop,1000 \
-|$o4?$o5,1; |$o13?$o4,1; $o13,1 ;;;\
-|$switchOn !~12?$switchOn;\
-|Tstop $o5?$5,1 |!~12?T5,$~5; $o13 $o4 $o5 $stop;\
-|$5?|!~5?$5on,1^$5off,1; $5;\
-|T5?|~5?$5off,1; T5;\
-|$5on?|!~5?~5 M{\"idx\":173,\"nvalue\":1,\"svalue\":\"1\"}; $5on;\
-|$5off?|~5?!~5 M{\"idx\":173,\"nvalue\":0,\"svalue\":\"0\"}; $5off T5;\
-|Tstop $o4 !$o5?$4,1 |!~12?T4,$~4; $o13 $o4 $o5 $stop;\
+HmultiSalon;\
+S12,0,plug1,21600000;\
+S14,0,plug2,14400000;\
+S15,0,USB,14400000;\
+S4,0,plug3,3600000;\
+S13,3;\
+|~13 !$switchOn?Tswitch,50;\
+|Tswitch?Tswitch |~13?$switchOn,1 Tstop Tstop,1000 \
+|$o15?$o4,1; |$o14?$o15,1; |$o12?$o14,1; $o12,1 ;;;\
+|$switchOn !~13?$switchOn;\
+|Tstop $o4?$4,1 |!~13?T4,$~4; $o12 $o14 $o15 $o4 Tstop;\
 |$4?|!~4?$4on,1^$4off,1; $4;\
-|T4?|~4?$4off,1; T4;\
-|$4on?|!~4?~4 M{\"idx\":172,\"nvalue\":1,\"svalue\":\"1\"}; $4on;\
-|$4off?|~4?!~4 M{\"idx\":172,\"nvalue\":0,\"svalue\":\"0\"}; $4off T4;\
-|Tstop $o13 !$o4 !$o5?$13,1 |!~12?T13,$~13; $o13 $o4 $o5 $stop;\
-|$13?|!~13?$13on,1^$13off,1; $13;\
-|T13?|~13?$13off,1; T13;\
-|$13on?|!~13?~13 M{\"idx\":171,\"nvalue\":1,\"svalue\":\"1\"}; $13on;\
-|$13off?|~13?!~13 M{\"idx\":171,\"nvalue\":0,\"svalue\":\"0\"}; $13off T13;\
+|T4?$4off,1 T4;\
+|$4on?|!~4?~4 M{\"idx\":163,\"nvalue\":1,\"svalue\":\"1\"}; $4on;\
+|$4off?|~4?!~4 M{\"idx\":163,\"nvalue\":0,\"svalue\":\"0\"}; $4off;\
+|Tstop $o15 !$o4?$15,1 |!~13?T15,$~15; $o12 $o14 $o15 $o4 Tstop;\
+|$15?|!~15?$15on,1^$5off,1; $15;\
+|T15?$15off,1 T15;\
+|$15on?|!~15?~15 M{\"idx\":164,\"nvalue\":1,\"svalue\":\"1\"}; $15on;\
+|$15off?|~15?!~15 M{\"idx\":164,\"nvalue\":0,\"svalue\":\"0\"}; $15off;\
+|Tstop $o14 !$o4 !$o15?$14,1 |!~13?T14,$~14; $o12 $o14 $o15 $o4 Tstop;\
+|$14?|!~14?$14on,1^$14off,1; $14;\
+|T14?$14off,1 T14;\
+|$14on?|!~14?~14 M{\"idx\":165,\"nvalue\":1,\"svalue\":\"1\"}; $14on;\
+|$14off?|~14?!~14 M{\"idx\":165,\"nvalue\":0,\"svalue\":\"0\"}; $14off;\
+|Tstop $o12 !$o4 !$o15 !$o14?$12,1 |!~13?T12,$~12; $o12 $o14 $o15 $o4 Tstop;\
+|$12?|!~12?$12on,1^$12off,1; $12;\
+|T12?$12off,1 T12;\
+|$12on?|!~12?~12 M{\"idx\":166,\"nvalue\":1,\"svalue\":\"1\"}; $12on;\
+|$12off?|~12?!~12 M{\"idx\":166,\"nvalue\":0,\"svalue\":\"0\"}; $12off;\
 ");
 
 std::map<String,String>           var;
