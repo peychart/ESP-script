@@ -463,10 +463,6 @@ void setConfig(){
     mqtt.pwd=ESPWebServer.arg("mqttPwd");
   }else if(ESPWebServer.hasArg("mqttTopic")){
     mqtt.topic=ESPWebServer.arg("mqttTopic");
-/*  }else{
-    for(auto& i: pin.gpio) if(ESPWebServer.hasArg(pin.name[i]))
-      setPin(i, ESPWebServer.arg(pin.name[i]));
-    return;*/
   }writeConfig();
 }
 

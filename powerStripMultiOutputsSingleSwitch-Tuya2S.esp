@@ -2,9 +2,9 @@
 //Setup: (Tuya powerstrip with Tywe2S - 3 outputs & no control on the USB block)
 setHostname(TuyaPowerstripTywe2S);
 //SETGPIO(pinNumber,pinMode [,pinName [,pinAssociatedValue(ex.:timeOnDelay for output or inital counter value for input)] ]
-setGPIO( 5, OUTPUT_DOWN, plug1,  600000);	//D1
-setGPIO( 4, OUTPUT_DOWN, plug2, 1800000);	//D2
-setGPIO(13, OUTPUT_DOWN, plug3, 1800000);	//D3
+setGPIO( 5, OUTPUT_DOWN, Vert, 1800000);	//D1
+setGPIO( 4, OUTPUT_DOWN, Jaune, 600000);	//D2
+setGPIO(13, OUTPUT_DOWN, Rouge,1800000);	//D3
 setGPIO(12, INPUT_PULLUP);			//D7
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if  GPIO(12) && !$switchOn		then timer(switch, 50);

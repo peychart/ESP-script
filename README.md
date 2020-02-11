@@ -26,6 +26,32 @@ The code below, not yet fully finalized, already seems to almost complete the ta
 
 In addition, this script server could also, if necessary, act as host of the WEB user interfaces allowing to control the process of each of the microcontrollers by means of script commands, thereby making the embedded microcode much lighter...
 
+
+Http requests available:
+<table>
+  <tr>
+    <td><tt>http://IPAddress</tt></td>
+    <td>WEB User Interface</td>
+  </tr>
+  <tr>
+    <td><tt>http://IPAddress/setConf?mqttBroker=mosquitto.home.lan</tt></td>
+    <td>set the mqtt broker, ... (available in WEB UI)</td>
+  </tr>
+  <tr>
+    <td><tt>http://IPAddress/script?cmd=$5on,1</tt></td>
+    <td>set pin 5 (see `script`.esp)</td>
+  </tr>
+  <tr>
+    <td><tt>http://IPAddress/script?cmd=$5off,1</tt></td>
+    <td>unset pin 5 (see `script`.esp)</td>
+  </tr>
+  <tr>
+    <td><tt>http://IPAddress/restart</tt></td>
+    <td>save status and reboot the device</td>
+  </tr>
+</table>
+
+
 Screenshots:
 
 ![](doc/screenshots/webui.png)
