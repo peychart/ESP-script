@@ -51,7 +51,7 @@ Http requests available:
   </tr>
 </table>
 
-(*): the "setConf" commands allows to reach all which is not modifiable with scripts...
+(*): "setConf" commands allow access to everything that cannot be modified with scripts...
 
 
 Screenshots:
