@@ -35,7 +35,7 @@ Http requests available:
   </tr>
   <tr>
     <td><tt>http://IPAddress/setConf?mqttBroker=mosquitto.home.lan</tt></td>
-    <td>set the mqtt broker, ... (available in WEB UI)</td>
+    <td>(*) set the mqtt broker, ... (available in WEB UI)</td>
   </tr>
   <tr>
     <td><tt>http://IPAddress/script?cmd=$5on,1</tt></td>
@@ -50,6 +50,8 @@ Http requests available:
     <td>save status and reboot the device</td>
   </tr>
 </table>
+
+(*): the "setConf" commands allows to reach all which is not modifiable with scripts...
 
 
 Screenshots:
