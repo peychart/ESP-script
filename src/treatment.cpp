@@ -7,31 +7,31 @@
 
 String defaultScript("\
 HmultiSalon;\
-S12,0,plug1,21600000;\
-S14,0,plug2,14400000;\
-S15,0,USB,14400000;\
-S4,0,plug3,3600000;\
+S12,0,Vert,21600000;\
+S14,0,Jaune,14400000;\
+S15,0,Rouge,14400000;\
+S0,1,USB,3600000;\
 S13,3;\
 |~13 !$switchOn?Tswitch,50;\
 |Tswitch?Tswitch |~13?$switchOn,1 Tstop Tstop,1000 \
-|$o15?$o4,1; |$o14?$o15,1; |$o12?$o14,1; $o12,1 ;;;\
+|$o15?$o0,1; |$o14?$o15,1; |$o12?$o14,1; $o12,1 ;;;\
 |$switchOn !~13?$switchOn;\
-|Tstop $o4?$4,1 |!~13?T4,$~4; $o12 $o14 $o15 $o4 Tstop;\
-|$4?|!~4?$4on,1^$4off,1; $4;\
-|T4?$4off,1 T4;\
-|$4on?|!~4?~4 M{\"idx\":163,\"nvalue\":1,\"svalue\":\"1\"}; $4on;\
-|$4off?|~4?!~4 M{\"idx\":163,\"nvalue\":0,\"svalue\":\"0\"}; $4off;\
-|Tstop $o15 !$o4?$15,1 |!~13?T15,$~15; $o12 $o14 $o15 $o4 Tstop;\
-|$15?|!~15?$15on,1^$5off,1; $15;\
+|Tstop $o0?$0,1 |!~13?T0,$~0; $o12 $o14 $o15 $o0 Tstop;\
+|$0?|!~0?$0on,1^$0off,1; $0;\
+|T0?$0off,1 T0;\
+|$0on?|!~0?~0 M{\"idx\":163,\"nvalue\":1,\"svalue\":\"1\"}; $0on;\
+|$0off?|~0?!~0 M{\"idx\":163,\"nvalue\":0,\"svalue\":\"0\"}; $0off;\
+|Tstop $o15 !$o0?$15,1 |!~13?T15,$~15; $o12 $o14 $o15 $o0 Tstop;\
+|$15?|!~15?$15on,1^$15off,1; $15;\
 |T15?$15off,1 T15;\
 |$15on?|!~15?~15 M{\"idx\":164,\"nvalue\":1,\"svalue\":\"1\"}; $15on;\
 |$15off?|~15?!~15 M{\"idx\":164,\"nvalue\":0,\"svalue\":\"0\"}; $15off;\
-|Tstop $o14 !$o4 !$o15?$14,1 |!~13?T14,$~14; $o12 $o14 $o15 $o4 Tstop;\
+|Tstop $o14 !$o0 !$o15?$14,1 |!~13?T14,$~14; $o12 $o14 $o15 $o0 Tstop;\
 |$14?|!~14?$14on,1^$14off,1; $14;\
 |T14?$14off,1 T14;\
 |$14on?|!~14?~14 M{\"idx\":165,\"nvalue\":1,\"svalue\":\"1\"}; $14on;\
 |$14off?|~14?!~14 M{\"idx\":165,\"nvalue\":0,\"svalue\":\"0\"}; $14off;\
-|Tstop $o12 !$o4 !$o15 !$o14?$12,1 |!~13?T12,$~12; $o12 $o14 $o15 $o4 Tstop;\
+|Tstop $o12 !$o0 !$o15 !$o14?$12,1 |!~13?T12,$~12; $o12 $o14 $o15 $o0 Tstop;\
 |$12?|!~12?$12on,1^$12off,1; $12;\
 |T12?$12off,1 T12;\
 |$12on?|!~12?~12 M{\"idx\":166,\"nvalue\":1,\"svalue\":\"1\"}; $12on;\
@@ -206,7 +206,7 @@ void setPinMode(String& s, ulong& p){  //Format: pinNumber,mode[,G'pinNumber'_in
       case  0: //reverse_output=false
       case  1: //reverse_output=true
         pinMode(g.toInt(), OUTPUT);
-        digitalWrite(g.toInt(), (pin.state[g]=((RESTO_VALUES_ON_BOOT || mustResto) ?pin.state[g] :false) xor pin.mode[g]));
+        digitalWrite(g.toInt(), (pin.state[g]=((RESTO_VALUES_ON_BOOT || mustResto) ?pin.state[g] :false)) xor pin.mode[g]);
         break;
       case  2: pinMode(g.toInt(), INPUT);
         break;
