@@ -142,7 +142,7 @@ The following allows you to configure some parameters of the Wifi Power Strip (a
 </td></tr>\n</table>\n\
 <br><h3>Network connection [<span id='macAddr'>00:00:00:00:00:00</span>] (device ident: <span id='ident'>Ident</span>):</h3>\n\
 <table id='ssids' style='width:100%;'></table>\n\
-<h6><a href='update' onclick='javascript:event.target.port=80'>Firmware update</a> - <a href='https://github.com/peychart/wifiPowerStrip'>Website here</a></h6>\n\n\
+<h6><a href='update' onclick='javascript:event.target.port=80'>Firmware update</a> - <a href='https://github.com/peychart/ESP-script'>Website here</a></h6>\n\n\
 </div></div>\n\
 <!-============MAIN FORM============->\n\
 <table style='width:100%;'>\n<tr style='height:75px;'>\n\
