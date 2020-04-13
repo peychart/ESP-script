@@ -6,36 +6,18 @@
 //HTuyaPowerstripTywe2S;
 
 String defaultScript("\
-HmultiSalon;\
-S12,0,Vert,21600000;\
-S14,0,Jaune,14400000;\
-S15,0,Rouge,14400000;\
-S0,1,USB,3600000;\
+HTuyaWallPadTywe2S;\
+S12,0,Power;\
 S13,3;\
 |~13 !$switchOn?Tswitch,50;\
-|Tswitch?Tswitch |~13?$switchOn,1 Tstop Tstop,1000 \
-|$o15?$o0,1; |$o14?$o15,1; |$o12?$o14,1; $o12,1 ;;;\
+|Tswitch?Tswitch |~13?$switchOn,1 Tstop Tstop,1000 $o12,1;;\
 |$switchOn !~13?$switchOn;\
-|Tstop $o0?$0,1 |!~13?T0,$~0; $o12 $o14 $o15 $o0 Tstop;\
-|$0?|!~0?$0on,1^$0off,1; $0;\
-|T0?$0off,1 T0;\
-|$0on?|!~0?~0 M{\"idx\":163,\"nvalue\":1,\"svalue\":\"1\"}; $0on;\
-|$0off?|~0?!~0 M{\"idx\":163,\"nvalue\":0,\"svalue\":\"0\"}; $0off;\
-|Tstop $o15 !$o0?$15,1 |!~13?T15,$~15; $o12 $o14 $o15 $o0 Tstop;\
-|$15?|!~15?$15on,1^$15off,1; $15;\
-|T15?$15off,1 T15;\
-|$15on?|!~15?~15 M{\"idx\":164,\"nvalue\":1,\"svalue\":\"1\"}; $15on;\
-|$15off?|~15?!~15 M{\"idx\":164,\"nvalue\":0,\"svalue\":\"0\"}; $15off;\
-|Tstop $o14 !$o0 !$o15?$14,1 |!~13?T14,$~14; $o12 $o14 $o15 $o0 Tstop;\
-|$14?|!~14?$14on,1^$14off,1; $14;\
-|T14?$14off,1 T14;\
-|$14on?|!~14?~14 M{\"idx\":165,\"nvalue\":1,\"svalue\":\"1\"}; $14on;\
-|$14off?|~14?!~14 M{\"idx\":165,\"nvalue\":0,\"svalue\":\"0\"}; $14off;\
-|Tstop $o12 !$o0 !$o15 !$o14?$12,1 |!~13?T12,$~12; $o12 $o14 $o15 $o0 Tstop;\
+|Tstop $o12?$12,1 |!~13?T12,$~12; $o12 Tstop;\
 |$12?|!~12?$12on,1^$12off,1; $12;\
 |T12?$12off,1 T12;\
-|$12on?|!~12?~12 M{\"idx\":166,\"nvalue\":1,\"svalue\":\"1\"}; $12on;\
-|$12off?|~12?!~12 M{\"idx\":166,\"nvalue\":0,\"svalue\":\"0\"}; $12off;\
+|$12on?|!~12?~12 M{\"idx\":188,\"nvalue\":1,\"svalue\":\"1\"}; Tdata,1000 $12on;\
+|$12off?|~12?!~12 M{\"idx\":188,\"nvalue\":0,\"svalue\":\"0\"}; Tdata $12off;\
+|Tdata?M{\"idx\":189,\"svalue\":\"~17\"} Tdata Tdata,60000;\
 ");
 
 std::map<String,String>           var;
@@ -129,6 +111,8 @@ void mySerialEvent(){char inChar;
 ulong getOp(String& s, ulong i, ulong& sep, ulong& last){
   for(sep=last=-1UL; !(last+1UL) && i<s.length(); i++) switch(s[i]){
     case  ' ':
+    case  '}':
+    case  '"':
     case   IF:
     case THEN:
     case ELSE:
@@ -138,11 +122,16 @@ ulong getOp(String& s, ulong i, ulong& sep, ulong& last){
   }return ((last+1UL) ?last : s.length()+1UL);
 }
 
+String getVar(String s);
 String getVar(String& s, ulong& p){
-  String z; bool isVar=(s[p]=='$');
-  ulong first(isVar?++p:p), last, sep; p=getOp(s, first, sep, last);
+  String z; bool isVar, isGpio(false); if(!(isVar=(s[p]=='$'))) isGpio=(s[p]=='~');
+  ulong first((isVar||isGpio)?++p:p), last, sep; p=getOp(s, first, sep, last);
   z=s.substring(first, (sep+1UL)?sep:last);
-  return (isVar ?(var.find(z)==var.end() ?"" :var[z]) :z);
+  if(isGpio){unsigned int o(getVar(z).toInt());
+    return((o<=16) ?String(digitalRead(o), DEC) :String(analogRead(o), DEC));
+  }else if(isVar)
+    return(var.find(z)==var.end() ?"" :var[z]);
+  return(z);
 }String getVar(String s){ulong v(0); return(getVar(s, v));}
 
 void setVar(String& s, ulong& p){
@@ -233,12 +222,17 @@ bool isTimer(String& s, ulong& p){
   return( (name.length() && timer[name]) ?isNow(timer[name]) :false );
 }
 
-void mqttString(String& s, ulong& i){ ulong first(i);
-  for(short n(0); i<s.length();) switch(s[i++]){
-    case '{': n++;      break;
-    case '}': if(--n>0) break;
-      mqttSend(s.substring(first, i));
-      return;
+void mqttString(String& s, ulong& i){ String r;
+  for(short n(0); i<s.length();){
+    switch(s[i]){
+      case '$':
+      case '~': r+=getVar(s,i);
+        continue;
+      case '{': n++;      break;
+      case '}': if(--n>0) break;
+        r+=s[i++]; mqttSend(r);
+        return;
+    }r+=s[i++];
 } }
 
 bool condition(String& s, ulong& i){bool isTrue;

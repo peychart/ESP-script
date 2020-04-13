@@ -26,6 +26,9 @@
 #define DEFAULT_DAYLIGHT        false
 #define NTP_INTERVAL            3600                //(s)
 
+#define SCRIPTHOST             "script.home.lan"
+#define SCRIPTPORT              8080
+
 #define DEFAULT_MQTT_BROKER    "mosquitto.home.lan"
 #define DEFAULT_MQTT_PORT       1883
 #define DEFAULT_MQTT_IDPREFIX  ""
@@ -37,15 +40,15 @@
 #define TUYA3S
 
 #ifdef TUYA2S
- #define POWER_LED             01
- #define BLINKING_POWERLED     250UL,1000UL
- #define WIFISTA_LED           03
+ #define POWER_LED             04
+ #define BLINKING_POWERLED     500UL,1000UL
+ #define WIFISTA_LED           05
  #define BLINKING_WIFILED      250UL,5000UL
 #endif
 
 #ifdef TUYA3S
 #define POWER_LED             16
-#define BLINKING_POWERLED     250UL,1000UL
+#define BLINKING_POWERLED     500UL,1000UL
 #define WIFISTA_LED           05
 #define BLINKING_WIFILED      5000UL,250UL
 #endif

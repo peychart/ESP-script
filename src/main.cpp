@@ -12,8 +12,7 @@ String                            hostname(DEFAULTHOSTNAME);    //Can be change 
 String                            ssid[SSIDCount()];            //Identifiants WiFi /Wifi idents
 String                            password[SSIDCount()];        //Mots de passe WiFi /Wifi passwords
 
-bool                              WiFiAP(false);
-bool                              mustResto(false);
+bool                              WiFiAP(false), mustResto(false), isScript(false);
 ulong                             next_reconnect(0UL);
 #ifdef DEFAULTWIFIPASS
   static ushort                   nbWifiAttempts(MAXWIFIRETRY), WifiAPTimeout;
@@ -157,12 +156,26 @@ inline void onConnect(){
 #endif
 }
 
+bool getNewScript(String ident){
+  WiFiClient client;
+  if(client.connect(SCRIPTHOST, SCRIPTPORT)){
+    client.print(String("GET /script?ident=") + ident + " HTTP/1.1\r\n" +
+      "Host: " + SCRIPTHOST + "\r\n" +
+      "Connection: close\r\n\r\n");
+    for(;client.available(); isScript=true){
+      if(!isScript) defaultScript="";
+      defaultScript+=client.readStringUntil('\r');
+    }client.stop();
+  }return isScript;
+}
+
 inline void ifConnected(){
   MDNS.update();
   if(ntp.source.length() && !isTimeSynchronized()){
     DEBUG_print("Retry NTP synchro...\n");
     NTP.getTime();
   }
+  if(!isScript)  isScript=getNewScript(String(ESP.getChipId(), DEC));
 #ifdef DEBUG
 if(telnetServer.hasClient()){                   //Telnet client connection:
     if (!telnetClient || !telnetClient.connected()){
